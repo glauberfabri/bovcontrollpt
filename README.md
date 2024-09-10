@@ -21,7 +21,7 @@ A Bovcontrol tem como missão digitalizar a pecuária, coletando e analisando da
 
 Instalação das dependências:
 
-```bash
+
 npm install express mongodb dotenv swagger-ui-express swagger-jsdoc
 
 
