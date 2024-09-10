@@ -91,32 +91,33 @@ bash => npm test
 
 
 Funcionalidades Implementadas
-Funcionalidades Implementadas
-Cadastro de Fazendeiro e Fazenda
+1. Cadastro de Fazendeiro e Fazenda
+Rota: POST /farmers
 
-Rota: POST /api/fazendeiros
-Descrição: Cadastra um novo fazendeiro e sua fazenda, incluindo informações como nome, localização e distância até a fábrica.
-Código: src/routes/fazendaRoutes.js
-Cadastro da Produção de Leite Diário
+Descrição: Cadastra um novo fazendeiro e sua fazenda.
 
-Rota: POST /api/producoes
-Descrição: Registra a produção diária de leite em litros para uma fazenda específica.
-Código: src/routes/producaoRoutes.js
-Consulta do Volume de Leite Entregue
+Código: src/routes/farmerRoutes.js
 
-Rota: GET /api/producoes/:fazenda_id/:mes
-Descrição: Consulta o volume total de leite entregue por dia e a média mensal para uma fazenda e mês específicos.
-Código: src/routes/producaoRoutes.js
-Consulta do Preço do Litro de Leite
+2. Cadastro da Produção de Leite Diário
+Rota: POST /productions
 
-Rota: GET /api/precos/:fazenda_id/:ano/:mes
-Descrição: Consulta o preço do litro de leite pago a um fazendeiro para um mês específico, com exibição nos formatos numérico brasileiro e inglês.
-Código: src/routes/precoRoutes.js
-Consulta do Preço do Litro de Leite para Cada Mês do Ano
+Descrição: Registra a produção diária de leite em litros.
 
-Rota: GET /api/preco-anual/:fazenda_id/:ano
-Descrição: Consulta o preço do litro de leite para cada mês do ano, dado uma fazenda e ano como parâmetros, com exibição nos formatos numérico brasileiro e inglês.
-Código: src/routes/precoRoutes.js
+Código: src/routes/productionRoutes.js
+
+3. Consulta do Volume de Leite Entregue
+Rota: GET /volume
+
+Descrição: Consulta o volume total de leite entregue e a média mensal para uma fazenda e mês específicos.
+
+Código: src/routes/volumeRoutes.js
+
+4. Consulta do Preço do Litro de Leite
+Rota: GET /price
+
+Descrição: Consulta o preço do litro de leite para uma fazenda e mês específicos, com exibição nos formatos numérico brasileiro e inglês.
+
+Código: src/routes/priceRoutes.js
 
 Essas rotas seguem as regras de negócios para cálculo do preço com base no volume de produção, distância até a fábrica e bônus para grandes volumes de leite, conforme definido no cenário do desafio.
 

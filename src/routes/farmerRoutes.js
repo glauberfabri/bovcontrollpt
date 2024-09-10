@@ -1,9 +1,11 @@
 const express = require('express');
-const { createFarmer, getFarmerById } = require('../models/farmerModel');
+const { ObjectId } = require('mongodb'); // Adicione isso para usar ObjectId
+const { createFarmer, getFarmerById, getFarmerByNameOrFarmName } = require('../models/farmerModel');
 const { addMilkProduction, getMilkProductionByFarmAndMonth } = require('../models/milkProductionModel');
 const { calculateMilkPrice, calculateTotalPayment } = require('../services/milkPricingService');
 const protect = require('../middleware/authMiddleware'); // Middleware de autenticação
 const { validateFarm, validateMilkProduction } = require('../middleware/validationMiddleware'); // Validação modular
+
 
 const router = express.Router();
 
@@ -11,6 +13,13 @@ const router = express.Router();
 router.post('/', protect, validateFarm, async (req, res) => {
   try {
     const { name, farmName, distance } = req.body;
+
+    // Verificar se já existe um fazendeiro com o mesmo nome ou fazenda
+    const existingFarmer = await getFarmerByNameOrFarmName(farmName);
+    if (existingFarmer) {
+      return res.status(400).json({ message: 'Farm or farmer with this name already exists.' });
+    }
+
     const farmerData = { name, farmName, distance };
     const newFarmer = await createFarmer(farmerData);
     res.status(201).json(newFarmer);
@@ -25,11 +34,17 @@ router.post('/:farmerId/milk-production', protect, validateMilkProduction, async
   try {
     const { farmerId } = req.params;
     const { liters, date } = req.body;
-    const month = new Date(date).getMonth() + 1; // Extrair mês
-    const year = new Date(date).getFullYear(); // Extrair ano
+
+    // Verifique se o farmerId está sendo convertido corretamente para ObjectId
+    if (!ObjectId.isValid(farmerId)) {
+      return res.status(400).json({ message: 'ID do fazendeiro inválido.' });
+    }
+
+    const month = new Date(date).getMonth() + 1; // Extrair o mês da data
+    const year = new Date(date).getFullYear();   // Extrair o ano da data
 
     const productionData = {
-      farmerId,
+      farmerId: new ObjectId(farmerId), // Converta para ObjectId
       liters,
       date,
       month,

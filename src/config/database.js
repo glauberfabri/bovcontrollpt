@@ -8,18 +8,13 @@ let client;
 
 const connectDB = async () => {
   try {
-    client = new MongoClient(process.env.MONGO_URI, {
-      useNewUrlParser: true, // Remova se a versão não precisar disso
-      useUnifiedTopology: true, // Remova se a versão não precisar disso
-    });
-
-    await client.connect();
-    db = client.db(); // Defina o banco de dados
-
+    client = new MongoClient(process.env.MONGO_URI); // Criando o cliente MongoDB
+    await client.connect(); // Conectando ao MongoDB
+    db = client.db(); // Seleciona o banco de dados
     console.log('MongoDB connected successfully');
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
+    process.exit(1); // Sair do processo em caso de falha de conexão
   }
 };
 
@@ -32,7 +27,7 @@ const getDB = () => {
 
 const closeDB = async () => {
   if (client) {
-    await client.close(); // Fechar o client em vez de db
+    await client.close(); // Fechar o cliente MongoDB
     console.log('MongoDB connection closed');
   }
 };

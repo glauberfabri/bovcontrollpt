@@ -3,56 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Test Frontend</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>API Test Frontend - Pecuária</title>
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUa1zYhYvovwe+VJ5YBZG+QGa1rZ6Z9ByggPONYUpPOMCfqgC6c5l5Cnvf5p" crossorigin="anonymous">
+
+  <!-- Arquivo CSS separado -->
+  <link rel="stylesheet" href="insercao.css">
+
 </head>
 <body>
-  <div class="container">
-    <h1>Testando API de Pecuária</h1>
 
-    <!-- Formulário de cadastro de fazendeiro -->
-    <h2>Cadastrar Fazendeiro</h2>
-    <form id="farmer-form">
-      <label for="name">Nome do Fazendeiro:</label>
-      <input type="text" id="name" required><br>
-      <label for="farmName">Nome da Fazenda:</label>
-      <input type="text" id="farmName" required><br>
-      <label for="distance">Distância até a fábrica (km):</label>
-      <input type="number" id="distance" required><br>
-      <button type="submit">Cadastrar Fazendeiro</button>
-    </form>
+  
 
-    <hr>
-
-    <!-- Formulário de registro de produção de leite -->
-    <h2>Registrar Produção de Leite</h2>
-    <form id="milk-production-form">
-      <label for="farmerId">ID do Fazendeiro:</label>
-      <input type="text" id="farmerId" required><br>
-      <label for="liters">Litros de leite:</label>
-      <input type="number" id="liters" required><br>
-      <label for="date">Data de Produção:</label>
-      <input type="date" id="date" required><br>
-      <button type="submit">Registrar Produção</button>
-    </form>
-
-    <hr>
-
-    <!-- Consultar Preço do Leite -->
-    <h2>Consultar Preço do Leite</h2>
-    <form id="milk-price-form">
-      <label for="farmerIdPrice">ID do Fazendeiro:</label>
-      <input type="text" id="farmerIdPrice" required><br>
-      <label for="month">Mês (1-12):</label>
-      <input type="number" id="month" required><br>
-      <button type="submit">Consultar Preço</button>
-    </form>
-
-    <!-- Resultado -->
-    <h3>Resultado da Consulta</h3>
-    <div id="result"></div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="#register">Cadastrar Fazendeiro</a>
+    <a href="#milkProduction">Registrar Produção</a>
+    <a href="#milkPrice">Consultar Preço</a>
+    <a id="logout-sidebar" href="#">Logout</a>
   </div>
 
+  <!-- Conteúdo Principal -->
+  <div class="content">
+    <div class="container">
+      <h1>API de Pecuária</h1>
+
+      <!-- Formulário de cadastro de fazendeiro -->
+      <h2 id="register">Cadastrar Fazendeiro</h2>
+      <form id="farmer-form">
+        <div class="mb-3">
+          <label for="name" class="form-label">Nome do Fazendeiro</label>
+          <input type="text" class="form-control" id="name" required>
+        </div>
+        <div class="mb-3">
+          <label for="farmName" class="form-label">Nome da Fazenda</label>
+          <input type="text" class="form-control" id="farmName" required>
+        </div>
+        <div class="mb-3">
+          <label for="distance" class="form-label">Distância até a fábrica (km)</label>
+          <input type="number" class="form-control" id="distance" required>
+        </div>
+        <button type="submit">Cadastrar Fazendeiro</button>
+      </form>
+
+      <hr>
+
+      <!-- Formulário de registro de produção de leite -->
+      <h2 id="milkProduction">Registrar Produção de Leite</h2>
+      <form id="milk-production-form">
+        <div class="mb-3">
+          <label for="farmerId" class="form-label">ID do Fazendeiro</label>
+          <input type="text" class="form-control" id="farmerId" required>
+        </div>
+        <div class="mb-3">
+          <label for="liters" class="form-label">Litros de leite</label>
+          <input type="number" class="form-control" id="liters" required>
+        </div>
+        <div class="mb-3">
+          <label for="date" class="form-label">Data de Produção</label>
+          <input type="date" class="form-control" id="date" required>
+        </div>
+        <button type="submit">Registrar Produção</button>
+      </form>
+
+      <hr>
+
+      <!-- Consultar Preço do Leite -->
+      <h2 id="milkPrice">Consultar Preço do Leite</h2>
+      <form id="milk-price-form">
+        <div class="mb-3">
+          <label for="farmerIdPrice" class="form-label">ID do Fazendeiro</label>
+          <input type="text" class="form-control" id="farmerIdPrice" required>
+        </div>
+        <div class="mb-3">
+          <label for="month" class="form-label">Mês (1-12)</label>
+          <input type="number" class="form-control" id="month" required>
+        </div>
+        <button type="submit">Consultar Preço</button>
+      </form>
+
+      <!-- Resultado -->
+      <h3>Resultado da Consulta</h3>
+      <div id="result"></div>
+    </div>
+  </div>
+
+ 
+
+  <!-- JavaScript do Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Script personalizado -->
   <script src="app.js"></script>
 </body>
 </html>

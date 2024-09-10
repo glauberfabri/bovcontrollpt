@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { createFarmer, getFarmerByFarmName } = require('../models/farmerModel');
+const { createFarmer, getFarmerByNameOrFarmName } = require('../models/farmerModel'); // Corrigido o nome da função
 const generateToken = require('../utils/generateToken');
 const { validateRegister, validateLogin } = require('../middleware/validationMiddleware'); // Importar middleware de validação
 
@@ -32,6 +32,9 @@ router.post('/register', validateRegister, async (req, res) => {
   }
 });
 
+
+
+// Rota para login
 router.post('/login', validateLogin, async (req, res) => {
   console.log("Recebido no corpo da requisição:", req.body);  // Debug
   
@@ -39,15 +42,17 @@ router.post('/login', validateLogin, async (req, res) => {
 
   try {
     // Verifica se o fazendeiro existe com base no nome da fazenda
-    const farmer = await getFarmerByFarmName(farmName);
+    const farmer = await getFarmerByNameOrFarmName(farmName);
 
     if (!farmer) {
       console.log("Farmer not found:", farmName);  // Debug
       return res.status(401).json({ message: 'Credenciais inválidas' });
     }
 
-    // Verifica se a senha está correta
+    // Verifica se a senha está correta com bcrypt.compare
     const isPasswordValid = await bcrypt.compare(password, farmer.password);
+
+    console.log('Resultado da comparação da senha:', isPasswordValid); // Log de depuração
 
     if (isPasswordValid) {
       // Se a senha estiver correta, retorna os dados do fazendeiro com o token JWT
@@ -65,8 +70,5 @@ router.post('/login', validateLogin, async (req, res) => {
     res.status(500).json({ message: 'Falha ao realizar login' });
   }
 });
-
-
-
 
 module.exports = router;

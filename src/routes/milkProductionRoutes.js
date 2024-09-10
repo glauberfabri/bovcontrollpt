@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { addMilkProduction, getMilkProductionByFarmAndMonth } = require('../models/milkProductionModel'); // Ajuste conforme o nome do arquivo do modelo
-const { validateMilkProduction } = require('../middleware/validationMiddleware'); // Middleware de validação
-const protect = require('../middleware/authMiddleware'); // Middleware de autenticação
+const { addMilkProduction, getMilkProductionByFarmAndMonth } = require('../models/milkProductionModel'); 
+const { validateMilkProduction } = require('../middleware/validationMiddleware'); 
+const protect = require('../middleware/authMiddleware'); 
+const milkPricingService = require('../services/milkPricingService'); // Serviço para cálculo do preço
 
 // Rota para adicionar produção de leite
 router.post('/', protect, validateMilkProduction, async (req, res) => {
   try {
-    const result = await addMilkProduction(req.body); // Use o método 'create' do modelo
-    res.status(201).json(result); // Retorne 201 para criação de recurso
+    const result = await addMilkProduction(req.body); // Adiciona a produção de leite
+    res.status(201).json(result); // Retorna 201 para criação de recurso
   } catch (error) {
     console.error('Error adding milk production:', error.message);
     res.status(500).json({ message: 'Failed to add milk production: ' + error.message });
@@ -32,6 +33,30 @@ router.get('/', protect, async (req, res) => {
   } catch (error) {
     console.error('Error querying milk production:', error.message);
     res.status(500).json({ message: 'Failed to fetch milk production: ' + error.message });
+  }
+});
+
+// Rota para consultar o preço do litro de leite para um mês específico
+router.get('/:farmerId/milk-price/:month', protect, async (req, res) => {
+  const { farmerId, month } = req.params;
+  const { year } = req.query; // Opcionalmente, o ano pode ser enviado como um parâmetro de query
+
+  try {
+    // Use o serviço para calcular o preço do leite
+    const milkPrice = await milkPricingService.calculateMonthlyMilkPrice(farmerId, parseInt(month), parseInt(year));
+
+    if (!milkPrice) {
+      return res.status(404).json({ message: 'No milk production found for the specified farmer and month.' });
+    }
+
+    // Retorna o preço em formatos diferentes (BRL e USD)
+    res.status(200).json({
+      priceBRL: milkPrice.priceBRL,
+      priceUSD: milkPrice.priceUSD,
+    });
+  } catch (error) {
+    console.error('Error calculating milk price:', error.message);
+    res.status(500).json({ message: 'Failed to calculate milk price: ' + error.message });
   }
 });
 

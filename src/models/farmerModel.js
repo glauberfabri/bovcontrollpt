@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb'); // Importar ObjectId para buscas por ID
 // Função para acessar a coleção de fazendeiros
 const getFarmerCollection = () => {
   const db = getDB(); // Obtenha a instância do banco de dados
-  return db.collection('farmers'); // Retornar a coleção de fazendeiros
+  return db.collection('farmers'); // Certificar-se de que a coleção 'farmers' está sendo usada
 };
 
 // Criar um novo fazendeiro
@@ -31,6 +31,27 @@ const createFarmer = async (farmerData) => {
   }
 };
 
+// Buscar um fazendeiro por `name` ou `farmName`
+const getFarmerByNameOrFarmName = async (identifier) => {
+  try {
+    const farmerCollection = getFarmerCollection(); // Usar a coleção correta 'farmers'
+    // Buscar fazendeiro por 'name' ou 'farmName'
+    const farmer = await farmerCollection.findOne({
+      $or: [{ name: identifier }, { farmName: identifier }],
+    });
+
+    if (!farmer) {
+      console.log(`Farmer not found with name or farm name: ${identifier}`);
+      return null;
+    }
+
+    return farmer;
+  } catch (error) {
+    console.error('Error retrieving farmer by name or farm name:', error.message);
+    throw new Error('Failed to retrieve farmer by name or farm name: ' + error.message);
+  }
+};
+
 // Buscar um fazendeiro por ID
 const getFarmerById = async (farmerId) => {
   try {
@@ -52,27 +73,8 @@ const getFarmerById = async (farmerId) => {
   }
 };
 
-// Buscar um fazendeiro por nome da fazenda
-const getFarmerByFarmName = async (farmName) => {
-  try {
-    const db = getDB(); // Certifique-se que a conexão está inicializada
-    const farmer = await db.collection('users').findOne({ farmName });
-
-    if (!farmer) {
-      console.log(`Farmer not found with farm name: ${farmName}`);
-      return null;
-    }
-    
-    return farmer;
-  } catch (error) {
-    console.error('Error retrieving farmer by farm name:', error.message);
-    throw new Error('Failed to retrieve farmer by farm name: ' + error.message);
-  }
-};
-
-
 module.exports = {
   createFarmer,
   getFarmerById,
-  getFarmerByFarmName,
+  getFarmerByNameOrFarmName, // Atualizado para verificar tanto 'name' quanto 'farmName'
 };

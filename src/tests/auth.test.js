@@ -4,6 +4,7 @@ const { connectDB, getDB, closeDB } = require('../config/database');
 
 let db; // Variável para armazenar a conexão com o banco de dados
 let farmer; // Variável para armazenar os dados do fazendeiro
+let token; // Token de autenticação para o fazendeiro
 
 beforeAll(async () => {
   // Estabelecer conexão com o banco de dados
@@ -13,17 +14,18 @@ beforeAll(async () => {
   // Limpar a coleção de fazendeiros para garantir um ambiente de teste limpo
   await db.collection('farmers').deleteMany({});
 
-  // Registrar um novo fazendeiro para usar nos testes
+  // Registrar um novo fazendeiro "Green Farm" para usar nos testes
   const res = await request(app)
     .post('/api/auth/register')
     .send({
-      name: 'admin',
-      farmName: 'admin',
+      name: 'Green Farm',
+      farmName: 'Green Farm',
       distance: 10,
       password: 'password123',
     });
 
   farmer = res.body; // Armazenar o fazendeiro registrado
+  token = farmer.token; // Armazenar o token JWT gerado
 });
 
 afterAll(async () => {
@@ -32,12 +34,12 @@ afterAll(async () => {
 });
 
 describe('Auth API', () => {
-  it('should register a new farmer', async () => {
+  it('deve registrar um novo fazendeiro com sucesso', async () => {
     const res = await request(app)
       .post('/api/auth/register')
       .send({
         name: 'Another Farmer',
-        farmName: 'Another Farm',
+        farmName: 'Blue Farm',
         distance: 15,
         password: 'password456',
       });
@@ -46,11 +48,11 @@ describe('Auth API', () => {
     expect(res.body).toHaveProperty('token');
   });
 
-  it('should login with valid credentials', async () => {
+  it('deve fazer login com credenciais válidas', async () => {
     const res = await request(app)
       .post('/api/auth/login')
       .send({
-        farmName: 'Test Farm',
+        farmName: 'Green Farm',
         password: 'password123',
       });
 
@@ -58,21 +60,20 @@ describe('Auth API', () => {
     expect(res.body).toHaveProperty('token');
   });
 
-  it('should not login with invalid credentials', async () => {
+  it('não deve fazer login com credenciais inválidas', async () => {
     const res = await request(app)
       .post('/api/auth/login')
       .send({
-        farmName: 'Test Farm',
+        farmName: 'Green Farm',
         password: 'wrongpassword',
       });
 
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty('message');
     expect(res.body.message).toBe('Credenciais inválidas');
-
   });
 
-  it('should not login with a non-existing farm', async () => {
+  it('não deve fazer login com uma fazenda inexistente', async () => {
     const res = await request(app)
       .post('/api/auth/login')
       .send({
@@ -83,6 +84,5 @@ describe('Auth API', () => {
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty('message');
     expect(res.body.message).toBe('Credenciais inválidas');
-
   });
 });

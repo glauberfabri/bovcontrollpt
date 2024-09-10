@@ -13,7 +13,13 @@ const protect = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         console.error('Erro ao verificar token:', err.message);  // Log detalhado do erro
-        return res.status(401).json({ message: 'Token inválido ou expirado, autenticação falhou' });
+
+        // Diferenciar entre token expirado e token inválido
+        const message = err.name === 'TokenExpiredError'
+          ? 'Token expirado, por favor faça login novamente'
+          : 'Token inválido, autenticação falhou';
+
+        return res.status(401).json({ message });
       }
 
       // Armazenar o usuário decodificado no request (disponível nas próximas funções)
