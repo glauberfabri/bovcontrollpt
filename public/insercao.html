@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test Frontend</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Testando API de Pecuária</h1>
+
+    <!-- Formulário de cadastro de fazendeiro -->
+    <h2>Cadastrar Fazendeiro</h2>
+    <form id="farmer-form">
+      <label for="name">Nome do Fazendeiro:</label>
+      <input type="text" id="name" required><br>
+      <label for="farmName">Nome da Fazenda:</label>
+      <input type="text" id="farmName" required><br>
+      <label for="distance">Distância até a fábrica (km):</label>
+      <input type="number" id="distance" required><br>
+      <button type="submit">Cadastrar Fazendeiro</button>
+    </form>
+
+    <hr>
+
+    <!-- Formulário de registro de produção de leite -->
+    <h2>Registrar Produção de Leite</h2>
+    <form id="milk-production-form">
+      <label for="farmerId">ID do Fazendeiro:</label>
+      <input type="text" id="farmerId" required><br>
+      <label for="liters">Litros de leite:</label>
+      <input type="number" id="liters" required><br>
+      <label for="date">Data de Produção:</label>
+      <input type="date" id="date" required><br>
+      <button type="submit">Registrar Produção</button>
+    </form>
+
+    <hr>
+
+    <!-- Consultar Preço do Leite -->
+    <h2>Consultar Preço do Leite</h2>
+    <form id="milk-price-form">
+      <label for="farmerIdPrice">ID do Fazendeiro:</label>
+      <input type="text" id="farmerIdPrice" required><br>
+      <label for="month">Mês (1-12):</label>
+      <input type="number" id="month" required><br>
+      <button type="submit">Consultar Preço</button>
+    </form>
+
+    <!-- Resultado -->
+    <h3>Resultado da Consulta</h3>
+    <div id="result"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

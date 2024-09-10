@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    width: 500px;
+    margin: 0 auto;
+  }
+  
+  h1, h2 {
+    color: #2c3e50;
+  }
+  
+  form {
+    margin-bottom: 20px;
+  }
+  
+  label, input {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  #result {
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+
+  body {
+    background-color: #f8f9fa;
+  }
+  
+  h2 {
+    margin-bottom: 30px;
+  }
+  
+  .container {
+    margin-top: 100px;
+  }
+  
+  #result {
+    color: red;
+  }
+  
+  

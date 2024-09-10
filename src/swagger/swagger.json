@@ -1,0 +1,233 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Bovcontrol API",
+      "version": "1.0.0",
+      "description": "API para gerenciar produção de leite e pagamentos"
+    },
+    "paths": {
+      "/api/farmers": {
+        "post": {
+          "summary": "Cadastro de fazendeiro",
+          "description": "Rota para cadastrar um novo fazendeiro",
+          "security": [{ "bearerAuth": [] }],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FarmerInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Fazendeiro cadastrado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Farmer"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro de validação"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          }
+        }
+      },
+      "/api/farmers/{farmerId}/milk-production": {
+        "post": {
+          "summary": "Registrar produção de leite",
+          "description": "Rota para registrar a produção diária de leite de um fazendeiro",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "farmerId",
+              "in": "path",
+              "required": true,
+              "description": "ID do fazendeiro",
+              "schema": { "type": "string" }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MilkProductionInput"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Produção de leite registrada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MilkProduction"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Erro de validação"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          }
+        }
+      },
+      "/api/farmers/{farmerId}/milk-price/{month}": {
+        "get": {
+          "summary": "Consultar preço do leite por mês",
+          "description": "Rota para consultar o preço do litro de leite em um determinado mês",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "farmerId",
+              "in": "path",
+              "required": true,
+              "description": "ID do fazendeiro",
+              "schema": { "type": "string" }
+            },
+            {
+              "name": "month",
+              "in": "path",
+              "required": true,
+              "description": "Mês para consultar o preço",
+              "schema": { "type": "string" }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Preço do leite consultado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/MilkPrice"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Nenhuma produção de leite encontrada"
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          }
+        }
+      },
+      "/api/farmers/{farmerId}/milk-productions": {
+        "get": {
+          "summary": "Listar produções de leite com paginação",
+          "description": "Rota para listar as produções de leite de um fazendeiro com suporte a paginação",
+          "security": [{ "bearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "farmerId",
+              "in": "path",
+              "required": true,
+              "description": "ID do fazendeiro",
+              "schema": { "type": "string" }
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "required": false,
+              "description": "Número da página",
+              "schema": { "type": "integer", "default": 1 }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "required": false,
+              "description": "Limite de resultados por página",
+              "schema": { "type": "integer", "default": 10 }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de produções de leite retornada com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/MilkProduction" }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro interno do servidor"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Farmer": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "farmName": { "type": "string" },
+            "distance": { "type": "number" }
+          }
+        },
+        "FarmerInput": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "farmName": { "type": "string" },
+            "distance": { "type": "number" }
+          },
+          "required": ["name", "farmName", "distance"]
+        },
+        "MilkProduction": {
+          "type": "object",
+          "properties": {
+            "farmerId": { "type": "string" },
+            "liters": { "type": "number" },
+            "date": { "type": "string", "format": "date" },
+            "month": { "type": "integer" },
+            "year": { "type": "integer" }
+          }
+        },
+        "MilkProductionInput": {
+          "type": "object",
+          "properties": {
+            "liters": { "type": "number" },
+            "date": { "type": "string", "format": "date" }
+          },
+          "required": ["liters", "date"]
+        },
+        "MilkPrice": {
+          "type": "object",
+          "properties": {
+            "totalLiters": { "type": "number" },
+            "pricePerLiter": { "type": "string" },
+            "pricePerLiterUSD": { "type": "string" },
+            "totalPayment": { "type": "string" },
+            "totalPaymentUSD": { "type": "string" }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  
